@@ -1,0 +1,428 @@
+\RequirePackage[l2tabu, orthodox]{nag}
+\documentclass[french,english]{beamer}
+\input{preamble/packages}
+\input{preamble/math_basics}
+\input{preamble/math_mine}
+\input{preamble/redac}
+\input{preamble/draw}
+\input{preamble/acronyms}
+
+\title{Multicriteria Decision Aid}
+\subtitle{A short introduction}
+\subject{MCDA}
+\keywords{subjectivity, preference elicitation, multiple criteria}
+\author{Olivier Cailloux}
+\institute[LAMSADE]{LAMSADE, Université Paris-Dauphine}
+\date{\formatdate{18}{4}{2017}}
+
+\setbeamertemplate{headline}[singleline]
+
+\begin{document}
+\begin{frame}[plain]
+	\tikz[remember picture,overlay]{
+		\path (current page.south west) node[anchor=south west, inner sep=0] {
+			\includegraphics[height=1cm]{LAMSADE95.jpg}
+		};
+		\path (current page.south) ++ (0, 1mm) node[anchor=south, inner sep=0] {
+			\includegraphics[height=9mm]{Dauphine.jpg}
+		};
+		\path (current page.south east) node[anchor=south east, inner sep=0] {
+			\includegraphics[height=1cm]{PSL.png}
+		};
+	}
+	\titlepage
+\end{frame}
+\addtocounter{framenumber}{-1}
+
+\begin{frame}
+	\frametitle{Outline}
+	\tableofcontents[subsectionstyle=hide]
+\end{frame}
+
+\section{Goal}
+\begin{frame}
+	\frametitle{Goal of \ac{MCDA}}
+	Desired:
+	\begin{itemize}
+		\item decide in agreement with your own preferences
+		\item in a systematic way
+	\end{itemize}
+	Preferences: intuitive knowledge of what’s right for you
+	\begin{block}{One goal of \ac{MCDA}}
+		Model preferences
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{\ac{MCDA}: what for? (Philosophically)}
+	\centering
+	\includegraphics[height=5cm]{ConnaisToi20.jpg}
+	\begin{block}{A Delphic maxim (Temple of Apollo)}
+	\centering
+		“Know thyself”
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{\ac{MCDA}: what for? (More practically)}
+	\begin{itemize}
+		\item Make sure you take the right decision (for you)
+		\item Discuss your intuitions
+		\item Model expertise
+		\item Understand intuitive notions (such as justice)
+		\item Delegate decision making
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Why model preferences?}
+	
+	\begin{quote}
+		There are three things extremely hard: Steel, a Diamond, and to know one's self.
+	\end{quote}
+	{\scriptsize\vspace{-2em}
+	\begin{flushright}
+		B. \citet[p. 179]{franklin_poor_2004}
+	\end{flushright}
+	}
+	\begin{itemize}
+		\item We hardly know our own preferences
+		\item You can’t have everything
+		\item Which trade-offs will you agree with?
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{An example}
+	\begin{itemize}
+		\item Let’s choose what to plant in our garden
+		\item Each year the performances change
+		\item We want a systematic decision procedure
+	\end{itemize}
+	\begin{center}
+		\begin{tikzpicture}
+			\path node[matrix of nodes, ampersand replacement=\&] (my matrix) {
+					\& quantity	\& taste	\& \node[align=left] {supports\\pollinators};	\& \node[align=left] {resists\\to cold};\\
+				Tomatoes	\& 7	\& A	\& A	\& | (st 1) | −−\\
+				Corn	\& 1.5	\& B	\& D	\& | (st 2) | −−\\
+				Cabbage	\& 7.5	\& D	\& B	\& | (st 3) | ++\\
+				Potatoes	\& 2.5	\& C	\& C	\& | (st 4) | +\\
+				...	\& 	\& 	\& 	\& \\
+			};
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\section{Context}
+\begin{frame}
+	\frametitle{Context}
+	\begin{itemize}
+		\item Criteria $\crits$, scales $X_j, \forall j \in \crits$
+		\item Action $a \in \prod_{j \in \crits} X_j$ is a vector of performances
+		\item Action $\allalts = \prod_{j \in \crits} X_j$
+		\item Available actions this year $\alts \subseteq \allalts$
+		\item Winners this year $B \subseteq \alts$
+	\end{itemize}
+	\begin{block}{Goal}
+		Obtain $f$ which maps any $A \subseteq \allalts$ to some $B \subseteq A$
+	\end{block}
+	\begin{center}
+		\begin{tikzpicture}
+			\path node[matrix of nodes, ampersand replacement=\&] (my matrix) {
+					\& quantity	\& taste	\& \node[align=left] {sup. pollinators};	\& \node[align=left] {res. to cold};\\
+				Tomatoes	\& 7	\& A	\& A	\& | (st 1) | −−\\
+				Corn	\& 1.5	\& B	\& D	\& | (st 2) | −−\\
+				Cabbage	\& 7.5	\& D	\& B	\& | (st 3) | ++\\
+				Potatoes	\& 2.5	\& C	\& C	\& | (st 4) | +\\
+			};
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Informational basis to determine $f$}
+	\begin{itemize}
+		\item We do \emph{not} search for the absolute best $f$
+		\item $f$ models the \emph{preference}
+		\item Of a decision maker
+		\item Her subjectivity is to be integrated in $f$
+	\end{itemize}
+\end{frame}
+
+\section[Preference]{What’s a preference?}
+\begin{frame}
+	\frametitle{What does “preferred” mean?}
+	Let’s determine your “preferred” university
+	\begin{itemize}
+		\item Help a researcher choose her university?
+		\item Help a student choose his university?
+		\item Help government spread funding?
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Preference in MCDA}
+	\begin{itemize}
+		\item A decision problem
+		\item A decision maker
+		\item Preference {\tiny typically} defined in terms of \emph{desired action}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Descriptive or prescriptive perspective}
+	MCDA {\tiny typically} adopts a {\tiny weak} prescriptive perspective
+	\begin{block}{Descriptive perspective}
+		The model describes the “usual” behavior of the subjects
+		\begin{itemize}
+			\item Example: which drink does the subject buy?
+			\item Predictive model
+		\end{itemize}
+	\end{block}
+	\begin{block}{Prescriptive perspective}
+		The model recommends actions coherent with the values of the \ac{DM}
+		\begin{itemize}
+			\item Example: you might want to consider this drink
+			\item Possibly talk about hypothetical decisions
+			\item Different validation
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\section{Methods}
+\begin{frame}
+	\frametitle{MCDA methods}
+	\begin{itemize}
+		\item $f$: a preference model (here, a strategy of choice)
+		\item $f$ represents the subjectivity of the \ac{DM}
+		\item $f$ maps $\alts \subseteq \allalts$ to $B \subseteq \alts$
+		\item $\allF$ the set of possible functions
+		\item How do we determine $f \in \allF$?
+	\end{itemize}
+	\begin{block}{MCDA method}
+		\begin{itemize}
+			\item Defines a class of functions $F \subseteq \allF$
+			\item Together with a class of \emph{preferential parameters} $\Omega$
+			\item Bijection maps $\omega \in \Omega$ to $f \in F$
+		\end{itemize}
+	\end{block}
+%	(Parameterized) \emph{method}: a class of function
+\end{frame}
+
+\begin{frame}
+	\frametitle{The Weighted sum method}
+	\begin{itemize}
+		\item Class of functions $F_\text{weighted sum}$: those that sum performances and compare the resulting scores
+		\item Preference model $\omega$: a set of weights
+		\item $\omega = \{w_j \in \R, \text{for each criterion }j\}$
+		\item $f_\omega$ compares the weighted sums
+	\end{itemize}
+	Weights: $\omega = \left<0.3, 0.3, 0.2, 0.2\right>$
+	\begin{center}
+		\begin{tikzpicture}
+			\path node[matrix of nodes, ampersand replacement=\&, inner sep=0, nodes={inner sep=.3333em}] (my matrix) {
+					\& quantity	\& taste	\& \node[align=left] {supports\\pollinators};	\& \node[align=left] {resists\\to cold};\\
+				Tomatoes	\& 7	\& 10	\& 7	\& | (st 1) | 0\\
+				Corn	\& 1.5	\& 5	\& 1	\& | (st 2) | 0\\
+				Cabbage	\& 7.5	\& 2	\& 5	\& | (st 3) | 10\\
+				Potatoes	\& 2.5	\& 3	\& 3	\& | (st 4) | 5\\
+			};
+			\onslide<2>{\path (st 1 -| my matrix.east) ++ (20mm, 0) node[anchor=west] (sc 1) {6.5};}
+			\onslide<1>{\path (st 1 -| my matrix.east) ++ (20mm, 0) node[anchor=west] (sc 1) {?};}
+			\draw[->] (st 1 -| my matrix.east) -- (sc 1);
+			\path (sc 1.west) ++(-10mm, 0.3cm) node (label) {$f_\omega$};
+			\onslide<2>{\path (st 2 -| my matrix.east) ++ (20mm, 0) node[anchor=west] (sc 2) {2.15};}
+			\draw[->] (st 2 -| my matrix.east) -- (sc 2);
+			\onslide<2>{\path (st 3 -| my matrix.east) ++ (20mm, 0) node[anchor=west] (sc 3) {5.85};}
+			\draw[->] (st 3 -| my matrix.east) -- (sc 3);
+			\onslide<2>{\path (st 4 -| my matrix.east) ++ (20mm, 0) node[anchor=west] (sc 4) {3.25};}
+			\draw[->] (st 4 -| my matrix.east) -- (sc 4);
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{A problem with the weighted sum}
+	The $f$ you want may not be in $F_\text{weighted sum}$
+	\begin{itemize}
+		\item You prefer St 1 to the other two?
+		\item Score(St 1) > score(St 2) requires $w_\text{course 1} > w_\text{course 2}$
+		\item Score(St 1) > score(St 3) requires $w_\text{course 2} > w_\text{course 1}$
+	\end{itemize}
+	\begin{center}
+		\begin{tikzpicture}
+			\path node[matrix of nodes, ampersand replacement=\&] (my matrix) {
+					\& course 1	\& course 2\\
+				St 1	\& 14	\& | (st 1) | 14\\
+				St 2	\& 8	\& | (st 2) | 20\\
+				St 3	\& 20	\& | (st 3) | 8\\
+			};
+			\path (st 1 -| my matrix.east) ++ (20mm, 0) node[anchor=west] (sc 1) {};
+			\draw[->] (st 1 -| my matrix.east) -- (sc 1);
+			\path (sc 1.west) ++(-10mm, 0.3cm) node (label) {$f_\omega$};
+			\path (st 2 -| my matrix.east) ++ (20mm, 0) node[anchor=west] (sc 2) {};
+			\draw[->] (st 2 -| my matrix.east) -- (sc 2);
+			\path (st 3 -| my matrix.east) ++ (20mm, 0) node[anchor=west] (sc 3) {};
+			\draw[->] (st 3 -| my matrix.east) -- (sc 3);
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\section{Preference elicitation}
+\begin{frame}
+	\frametitle{Goal of preference elicitation}
+	\begin{itemize}
+		\item Assume we chose the method
+		\item Method determines class of functions $F$ and class of parameters $\Omega$
+		\item How shall we determine parameters $\omega \in \Omega$?
+		\item The \ac{DM} does not know the answer
+		\item Her usual behavior does not determine the answer
+		\item BUT we assume she is available to answer questions
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Elicitation}
+	\begin{block}{Elicit (\emph{Oxford English Dictionary}{\tiny , excerpt})}
+		\begin{enumerate}
+			\item To draw forth (what is latent or potential) into sensible existence.
+			\item to extract, draw out (information) from a person by interrogation
+			\item  To draw forth, evoke (a response, manifestation, etc.) from a person.
+		\end{enumerate}
+		\begin{quote}
+			The edge of one [fissure] which elicited other sentiments than those of admiration.
+		\end{quote}\vspace{-2em}\scriptsize
+		\begin{flushright}
+			J. Tyndall, Glaciers of Alps, i. §25. 188
+		\end{flushright}
+	\end{block}
+	\begin{quote}
+%		Ce raisin que le soleil élicite de la terre et que son rayon amical conduit de la fleur à la grappe (Claudel, Un Poète regarde la Croix, 1938, p. 128), Trésor de la langue française.
+	\end{quote}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Preference elicitation}
+	\begin{itemize}
+		\item Ask questions to the \ac{DM}
+		\item Questions must be: understandable
+		\item Interpretable rigorously
+		\item Informative
+		\item {\tiny Hopefully} questions that the \ac{DM} can answer confidently
+	\end{itemize}
+	Goal: obtain a “satisfactory” $f$
+	\begin{itemize}
+		\item Elicitation can be: by parameters, by examples, or a mix, possibly using axiomatization
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Elicitation by parameters}
+	\begin{itemize}
+		\item Assume a method has three parameters with identifiable “roles”
+		\item Explain the effects of the parameters on $f$
+		\item Ask the \ac{DM} to fix the parameters
+		\item Also permits to check whether the \ac{DM} accepts the method (accepts $F$)
+		\item Possibly: show the effects of $f$ on samples
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Elicitation by examples}
+	\begin{itemize}
+		\item Use a set of examples to constrain $f$
+		\item The \ac{DM} declares that $f$ should satisfy $f(\{a, b\}) = \{a\}$
+		\item Sometimes: use historic examples
+		\item Ideally these should be examples the \ac{DM} knows how to treat
+		\item Detect whether some $f \in F$ represents all examples
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Axiomatic elicitation}
+	\begin{itemize}
+		\item A method can be axiomatized
+		\item {\tiny Sometimes} means that we know exactly which questions to ask, in which sequence, to determine $f$
+		\item And the conditions under which $f$ exists coherent with those answers
+		\item May be compatible with other two approaches
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Some topics of study}
+	\begin{itemize}
+		\item (Axiomatic) study of classes of functions
+		\item Elicitation procedures
+		\item Extend to group decision making
+		\item Extend to uncertainty on performances
+		\item Cases study
+	\end{itemize}
+\end{frame}
+
+\section{Open questions}
+\begin{frame}
+	\frametitle{Open questions}
+	Is the model $f$ we obtain necessary?
+	\begin{itemize}
+		\item Several reasonable models may be possible
+		\item What’s the part of arbitrariness in the model?
+	\end{itemize}
+	Will the \ac{DM} possibly accept (somehow) unreasonable models?
+	\begin{itemize}
+		\item What does unreasonable mean?
+	\end{itemize}
+	How do we compare models?
+	\begin{itemize}
+		\item How do we validate?
+		\item What does $f$ model precisely?
+	\end{itemize}
+	Elicitation: are we asking questions the \ac{DM} can answer?
+%K&T: framing effects. Slovic, Lability. We want the non-arbitrary part of the preferences
+\end{frame}
+
+\begin{frame}[plain]
+	\addtocounter{framenumber}{-1}
+	\begin{center}
+		\huge
+		\textit{Thank you for your attention!}
+	\end{center}
+\end{frame}
+
+\appendix
+\AtBeginSection{
+}
+
+\clearpage\pdfbookmark[2]{\refname}{\refname}
+\begin{frame}
+	\frametitle{\refname}
+ 	\bibliography{mcda}
+\end{frame}
+
+\clearpage\pdfbookmark{License}{License}
+\begin{frame}[plain]
+	\frametitle{License}
+	This presentation, and the associated \LaTeX{} code, are published under the \href{http://opensource.org/licenses/MIT}{MIT license}. Feel free to reuse (parts of) the presentation, under condition that you cite the author.
+	
+	Credits are to be given to \href{http://www.lamsade.dauphine.fr/~ocailloux/}{Olivier Cailloux}, Université Paris-Dauphine.
+	
+	The drawing of the Temple of Apollo is copyrighted by Stéphane Deparis (used with permission). Many thanks to him.
+\end{frame}
+\addtocounter{framenumber}{-1}
+\end{document}
+
+\begin{frame}
+	\frametitle{}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{}
+	\begin{block}{}
+		\begin{itemize}
+			\item 
+		\end{itemize}
+	\end{block}
+\end{frame}
+\end{document}
